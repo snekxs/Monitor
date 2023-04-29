@@ -87,7 +87,7 @@ function checkProducts() {
               .join("\n")
           )
           .setColor("#00ff00");
-
+        hook.send("@everyone");
         hook.send(message);
 
         lastProductCount = data.products.length;
