@@ -120,14 +120,20 @@ function checkUpdates() {
         const product = sortedProducts[i];
         const title = product.title;
         const updated_at = product.updated_at;
+        const handle = product.handle;
+        const variant = product.variants[0];
+        const price = variant.price;
+        const images = variant.images[0];
+        const image_src = images.src;
 
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
           console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
           const message = new MessageBuilder()
             .setTitle("Product Updated!")
-            .setDescription(
-              `The following product has been updated: **${title}**`
-            );
+            .setDescription(`**${title}**`)
+            .setThumbnail(image_src)
+            .addField("Product Page", ["Link"](`${url}/products/${handle}`))
+            .addField("Price", `$${price}`);
 
           hook.send("@everyone");
           hook.send(message);
