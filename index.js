@@ -96,6 +96,54 @@ function checkProducts() {
     .catch((error) => console.error(error));
 }
 
-// Run checkProducts() immediately and then every hour (3600000 milliseconds)
-checkProducts();
-setInterval(checkProducts, 3600000);
+let lastUpdatedAt = null;
+
+function checkUpdates() {
+  const now = new Date();
+  const mstOptions = { timeZone: "America/Denver" };
+  const mstTime = now.toLocaleString("en-US", mstOptions);
+  const checking = new MessageBuilder()
+    .setTitle("Checking for updates ...")
+    .setDescription(`Current time and date (MST): ${mstTime}`)
+    .setColor("#00ff00");
+
+  logs.send(checking);
+
+  fetch(`${url}products.json`)
+    .then((response) => response.json())
+    .then((data) => {
+      const sortedProducts = data.products.sort(
+        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+      );
+
+      for (let i = 0; i < sortedProducts.length; i++) {
+        const product = sortedProducts[i];
+        const title = product.title;
+        const updated_at = product.updated_at;
+
+        if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
+          console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
+          const message = new MessageBuilder()
+            .setTitle("Product Updated!")
+            .setDescription(
+              `The following product has been updated: **${title}**`
+            );
+
+          hook.send("@everyone");
+          hook.send(message);
+        }
+      }
+
+      // Store the most recent updated_at value for future comparisons
+      lastUpdatedAt = sortedProducts[0].updated_at;
+    });
+}
+
+function main() {
+  checkProducts();
+  setInterval(checkProducts, 3600000);
+  checkUpdates();
+  setInterval(checkUpdates, 3600000);
+}
+
+main();
