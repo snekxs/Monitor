@@ -123,8 +123,9 @@ function checkUpdates() {
         const handle = product.handle;
         const variant = product.variants[0];
         const price = variant.price;
-        const images = product.images[0];
-        const image_src = images.src;
+        const images = product.images[0]
+          ? product.images[0].src
+          : "https://via.placeholder.com/500";
 
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
           console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
