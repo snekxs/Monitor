@@ -123,7 +123,7 @@ function checkUpdates() {
         const handle = product.handle;
         const variant = product.variants[0];
         const price = variant.price;
-        const images = variant.images[0];
+        const images = product.images[0];
         const image_src = images.src;
 
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
