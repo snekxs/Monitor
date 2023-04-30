@@ -133,7 +133,7 @@ function checkUpdates() {
             .setTitle("Product Updated!")
             .setDescription(`**${title}**`)
             .setThumbnail(images)
-            .addField("Product Page", ["Link"](`${url}/products/${handle}`))
+            .addField("Product Page", `[Link](${url}/products/${handle})`)
             .addField("Price", `$${price}`);
 
           hook.send("@everyone");
