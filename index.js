@@ -127,6 +127,15 @@ function checkUpdates() {
           ? product.images[0].src
           : "https://via.placeholder.com/500";
 
+        fs.appendFile(
+          "sorted-products.json",
+          JSON.stringify(product) + "\n",
+          (err) => {
+            if (err) throw err;
+            hook.send("New product data added to file");
+          }
+        );
+
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
           console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
           const message = new MessageBuilder()
