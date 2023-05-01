@@ -1,4 +1,5 @@
 const { Webhook, MessageBuilder } = require("discord-webhook-node");
+const fs = require("fs");
 
 const hook = new Webhook(
   "https://discord.com/api/webhooks/1101727190913134593/7qGrNbhO2r6bg0h6bI1bHRnRBlAJAtS8cAgneHjFOhZaeNDMKOi6oBULGy1SHmmctPIz"
@@ -127,16 +128,17 @@ function checkUpdates() {
           ? product.images[0].src
           : "https://via.placeholder.com/500";
 
-        fs.appendFile(
-          "sorted-products.json",
-          JSON.stringify(product) + "\n",
-          (err) => {
-            if (err) throw err;
-            hook.send("New product data added to file");
-          }
-        );
+        fs.appendFile("old.json", JSON.stringify(product) + "\n", (err) => {
+          if (err) throw err;
+          console.log("New product data added to file");
+        });
 
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
+          fs.appendFileSync(
+            "updated.json",
+            JSON.stringify(product, null, 2) + "\n"
+          );
+
           console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
           const message = new MessageBuilder()
             .setTitle("Product Updated!")
