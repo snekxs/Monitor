@@ -128,17 +128,7 @@ function checkUpdates() {
           ? product.images[0].src
           : "https://via.placeholder.com/500";
 
-        fs.appendFile("old.json", JSON.stringify(product) + "\n", (err) => {
-          if (err) throw err;
-          console.log("New product data added to file");
-        });
-
         if (lastUpdatedAt && new Date(updated_at) > new Date(lastUpdatedAt)) {
-          fs.appendFileSync(
-            "updated.json",
-            JSON.stringify(product, null, 2) + "\n"
-          );
-
           console.log(`${title} - Updated ${getDaysAgo(updated_at)}`);
           const message = new MessageBuilder()
             .setTitle("Product Updated!")
